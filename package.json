@@ -11,7 +11,9 @@
     "start": "node ./server/app.js",
     "server-dev": "nodemon ./server/app.js",
     "build": "webpack -p",
-    "webpack": "webpack -w"
+    "webpack": "webpack -w",
+    "heroku-prebuild": "",
+    "heroku-postbuild": "webpack -p --config ./webpack.prod.config.js --progress"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
