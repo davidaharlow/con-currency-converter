@@ -17,7 +17,7 @@
     "server-inspect": "nodemon --inspect ./server/app.js",
     "build": "webpack -p",
     "webpack": "webpack -w",
-    "postinstall": "webpack -d",
+    "postinstall": "webpack -d"
   },
   "dependencies": {
     "babel-core": "^6.24.0",
