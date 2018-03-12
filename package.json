@@ -12,9 +12,9 @@
   },
   "scripts": {
     "test": "mocha test",
-    "start": "node ./server/app.js",
-    "server-dev": "nodemon ./server/app.js",
-    "server-inspect": "nodemon --inspect ./server/app.js",
+    "start": "node app/server/app.js",
+    "server-dev": "nodemon app/server/app.js",
+    "server-inspect": "nodemon --inspect app/server/app.js",
     "build": "webpack -p",
     "webpack": "webpack -w",
     "postinstall": "webpack -d"
