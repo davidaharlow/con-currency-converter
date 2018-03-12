@@ -6,6 +6,10 @@
   "directories": {
     "test": "test"
   },
+  "engines": {
+    "node": "^9.2.0",
+    "npm": "^5.5.1"
+  },
   "scripts": {
     "test": "mocha test",
     "start": "node ./server/app.js",
