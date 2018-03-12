@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const helpers = require('../helpers/feesAndRates.js');
+const dbHelpers = require('../../database/helpers/conversionOrders.js')
 
 router.get('/', (req, res, next) => {
   res.render('index', {});
@@ -40,6 +41,17 @@ router.get('/api/fees', (req, res, next) => {
     destCurrency: destCurrency, 
     feeAmount: feeAmount  
   })
+});
+
+router.get('/userIdByUsername/:username', async (req, res, next) => {
+   const userId = await dbHelpers.selectUserId(req.params.username);
+   res.json({userId: userId});
+});
+
+router.post('/createOrder', (req, res, next) => {
+   console.log('in server', req.body);
+   dbHelpers.createOrder(req.body)
+   res.sendStatus(201);
 });
 
 module.exports = {

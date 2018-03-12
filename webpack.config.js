@@ -1,4 +1,4 @@
-var path = require('path');
+const path = require('path');
 
 module.exports = {
     entry: path.join(__dirname, "app/public/js/main.js"),
@@ -7,14 +7,14 @@ module.exports = {
 	path: path.resolve(__dirname, 'app/public/js/build')
     },
     devtool: "source-map",
-    module: { // Loaders apply transformations before a file is added to bundle.js
+    module: { 
 	loaders: [
 	    {
-		test: /\.js$/, //transform all .js files
-		exclude: /node_modules/, // except for node_modules
-		loader: 'babel-loader', // apply the babel-loader to compile the files
+		test: /\.js$/, 
+		exclude: /node_modules/, 
+		loader: 'babel-loader', 
 		query: {
-		    presets: ['react', 'es2015', 'stage-3'] // load the react, es2015 babel settings
+		    presets: ['react', 'es2015', 'stage-3'] 
 		}
 	    }
 	]

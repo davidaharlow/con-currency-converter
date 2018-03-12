@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import Option from 'muicss/lib/react/option';
 import Select from 'muicss/lib/react/select';
 import Input from 'muicss/lib/react/input';
+import Form from 'muicss/lib/react/form';
+import Button from 'muicss/lib/react/button';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
 import FeesTable from './FeesTable';
@@ -11,14 +13,17 @@ import * as actions from '../actions/actions';
 class Conversion extends React.Component {
   constructor(props) {
     super(props);
+    
     this.handleOriginAmountChange = this.handleOriginAmountChange.bind(this);
     this.handleDestAmountChange = this.handleDestAmountChange.bind(this);
     this.handleOriginCurrencyChange = this.handleOriginCurrencyChange.bind(this);
     this.handleDestCurrencyChange = this.handleDestCurrencyChange.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handleOrderSubmit = this.handleOrderSubmit.bind(this);
   }
 
   componentDidMount() {
-    // this.originAmountInput.focus();
+    
   }
 
   handleOriginCurrencyChange(event) {
@@ -67,11 +72,7 @@ class Conversion extends React.Component {
 
   handleOriginAmountChange(event) {
     let newAmount = event.target.value;
-
-    // remove unallowed chars
     newAmount = newAmount.replace(',','')
-
-    // optimistic field updates
     this.props.dispatch(actions.changeOriginAmount(newAmount));
 
     const payload = {
@@ -94,11 +95,7 @@ class Conversion extends React.Component {
 
   handleDestAmountChange(event) {
     let newAmount = event.target.value;
-
-    // remove unallowed chars
     newAmount = newAmount.replace(',','')
-
-    // optimistic field updates
     this.props.dispatch(actions.changeDestAmount(newAmount));
 
     const payload = {
@@ -111,7 +108,36 @@ class Conversion extends React.Component {
     this.props.dispatch(actions.fetchConversionRateAndFees(payload));
   }
 
+  handleUsernameChange(event) {
+    const username = event.target.value;
+
+    const usernamePayload = {
+      username: username
+    }
+
+    this.props.dispatch(actions.usernameChange(usernamePayload));
+  }
+
+  handleOrderSubmit(event) {
+    // To Do: Build out SPA functionality, don't refresh page, but clean it up
+    event.preventDefault();
+
+    const today =`${new Date().getMonth() + 1}${new Date().getDate()}${new Date().getYear()}`
+    const orderSubmitPayload = {
+      username: this.props.username,
+      originCurrency: this.props.originCurrency,
+      destinationCurrency: this.props.destinationCurrency,
+      originAmount: parseInt(this.props.originAmount),
+      destinationAmount: parseInt(this.props.destinationAmount),
+      date: parseInt(today)
+    }
+
+    this.props.dispatch(actions.orderSubmit(orderSubmitPayload));
+    alert('Your order has been submitted and is saved in the postgres database. To Do: Render Flash Message on Page.  Your money order will be ready tomorrow at 12pm');
+  }
+
   render() {
+    const currencyCodes = ['AUD','BGN','BRL','CAD','DKK','EUR','GBP','HKD','IDR','JPY','MXN','SEK','SGD','THB','USD'];
     let errorMsg;
     if (this.props.errorMsg) {
       errorMsg = <div className="errorMsg">{this.props.errorMsg}</div>
@@ -130,16 +156,16 @@ class Conversion extends React.Component {
         {errorMsg}
         <Input label="Convert" className="amount-field" onChange={this.handleOriginAmountChange} value={this.props.originAmount} />
         <Select name="input" label="Select Currency" value={this.props.originCurrency} onChange={this.handleOriginCurrencyChange}>      
-          <Option value="USD" label="USD" />
-          <Option value="EUR" label="EUR" />
-          <Option value="JPY" label="JPY" />
+          {currencyCodes.map((currency, i) => <Option key={i} value={currency} label={currency} />)}
         </Select>
         <Input label="To" className="amount-field" onChange={this.handleDestAmountChange} value={this.props.destinationAmount} placeholder="Input 2" />
         <Select name="input" label="Select Currency" value={this.props.destinationCurrency} onChange={this.handleDestCurrencyChange}>
-          <Option value="USD" label="USD" />
-          <Option value="EUR" label="EUR" />
-          <Option value="JPY" label="JPY" />
+          {currencyCodes.map((currency, i) => <Option key={i} value={currency} label={currency} />)}
         </Select>
+        <Form onSubmit={this.handleOrderSubmit}>
+          <Input label="Username" placeholder="Edsger Wybe Dijkstra" onChange={this.handleUsernameChange} value={this.props.username}/>
+          <Button variant="raised">Submit Currency Order</Button>
+        </Form>
         <br/>
         <FeesTable
           originCurrency={this.props.originCurrency}
@@ -162,7 +188,8 @@ export default connect((state, props) => {
     conversionRate: state.amount.conversionRate,
     feeAmount: state.amount.feeAmount,
     totalCost: state.amount.totalCost,
-    errorMsg: state.error.errorMsg
+    username: state.order.username,
+    errorMsg: state.error.errorMsg,
   }
 
 })(Conversion);

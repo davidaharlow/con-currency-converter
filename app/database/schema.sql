@@ -10,7 +10,6 @@ SET CATALOG "concurrency_converter";
 CREATE TABLE IF NOT EXISTS "concurrency_converter"."users"(
   "id" SERIAL NOT NULL,
   "username" varchar(45) NOT NULL,
-  "password" varchar(45) NOT NULL,
   PRIMARY KEY ("id")
 );
 
@@ -19,10 +18,9 @@ CREATE TABLE IF NOT EXISTS "concurrency_converter"."users"(
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS "concurrency_converter"."orders"(
   "id" SERIAL NOT NULL,
-  "user_id" int NOT NULL REFERENCES users(id),
+  "user_id" int NOT NULL REFERENCES concurrency_converter.users(id),
   "orign_currency" varchar(45) NOT NULL,
   "destination_currency" varchar(45) NOT NULL,
-  "exchange_rate" int NOT NULL,
   "origin_amount" int NOT NULL,
   "destination_amount" int NOT NULL,
   "date" INT NOT NULL,

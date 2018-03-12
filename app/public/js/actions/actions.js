@@ -32,6 +32,37 @@ export const changeDestCurrency = (newCurrency) => {
   }
 }
 
+export const usernameChange = (usernameObj) => {
+  return {
+    type:types.CHANGE_USERNAME,
+    data:{username: usernameObj.username}
+  }
+}
+
+export const orderSubmit = (payload) => {
+  axios.get(`/userIdByUsername/${payload.username}`)
+    .then((userId) => {
+      payload.userId = userId.data.userId;
+      axios({
+        method: 'post',
+        url: '/createOrder',
+        headers: {"Content-Type": "application/json"},
+        data: JSON.stringify(payload)
+      })
+        .then(() => {
+          console.log('Order saved to database', payload)
+        })
+    })
+    .catch((err) => {
+      console.log('Order failed to save to database', payload)
+    })
+
+  return {
+    type:types.ORDER_SUBMIT,
+    data:{}
+  }
+}
+
 export const fetchConversionRate = (payload) => {
   return (dispatch) => {
     makeConversionAjaxCall(payload, dispatch);
@@ -54,7 +85,7 @@ const _makeConversionAjaxCall = (payload, dispatch) => {
 const makeConversionAjaxCall = debounce(_makeConversionAjaxCall, 300);
 
 
-export const fetchConversionRateAndFees = (payload) => {
+export const fetchConversionRateAndFees = (payload, dispatch) => {
   return (dispatch) => {
     makeConversionAndFeesAjaxCalls(payload, dispatch);
   }

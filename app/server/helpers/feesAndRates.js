@@ -18,10 +18,14 @@ const getExchangeRate = async (originCurrency, destinationCurrency) => {
 
 const getFee = (originAmount, originCurrency, destinationCurrency) => {
   let feePercentage = 0;
+  if (originCurrency === destinationCurrency) {
+    return feePercentage;
+  }
+
   feePercentage = fees[`${originCurrency}_${destinationCurrency}`];
 
   if (feePercentage === 'undefined') {
-    return console.log(`ERROR: Fee % missing for ${originCurrency} -> ${destinationCurrency}`)
+    console.log(`ERROR: Fee % missing for ${originCurrency} -> ${destinationCurrency}`)
   }
 
   return originAmount * feePercentage / 100;
