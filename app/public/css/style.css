@@ -1,0 +1,49 @@
+body {
+  padding-left: 50px;
+  padding-top: 25px;
+  padding-right: 50px;
+  padding-bottom: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background:radial-gradient(#77d19e,#46c17b);
+}
+
+.errorMsg {
+  background-color: #a20000;
+  color: #fff;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+.titlePT1, .titlePT2, .titlePT3 {
+	font: 32px Plantin, "Times New Roman", serif;
+}
+
+.currencyImg {
+	width: 470px;
+	display: block;
+}
+
+.br1, .br2 {
+	display: none;
+}
+
+@media (max-width: 590px) {
+	.currencyImg {
+		width: 330px;
+	}
+	.br2 {
+		display: block;
+	}
+}
+
+@media (max-width: 460px) {
+	.currencyImg {
+		width: 250px;
+	}
+	.br1 {
+		display: block;
+	}
+	.br2 {
+		display: none;
+	}
+}

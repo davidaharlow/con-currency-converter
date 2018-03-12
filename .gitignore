@@ -1,0 +1,11 @@
+# Keys
+.env
+
+# Project Specific
+scratchPad/
+
+# Dependency directorys
+node_modules/
+
+# Webpack
+app/public/build
