@@ -26693,7 +26693,7 @@ var Conversion = function (_React$Component) {
       };
 
       this.props.dispatch(actions.orderSubmit(orderSubmitPayload));
-      alert('Your order has been submitted and is saved in the postgres database. To Do: Render Flash Message on Page.  Your money order will be ready tomorrow at 12pm');
+      alert('Your order has been submitted and is saved in the postgres database. \n      To Do: Render Flash Message on Page and clean up left over state from transaction. \n      Also, your ' + this.props.destinationAmount + ' ' + his.props.destinationCurrency + ' will be ready tomorrow at 12pm. :)');
     }
   }, {
     key: 'render',
