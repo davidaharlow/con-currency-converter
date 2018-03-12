@@ -5184,9 +5184,9 @@ var _configureStore = __webpack_require__(47);
 
 var _configureStore2 = _interopRequireDefault(_configureStore);
 
-var _conversion = __webpack_require__(131);
+var _Conversion = __webpack_require__(132);
 
-var _conversion2 = _interopRequireDefault(_conversion);
+var _Conversion2 = _interopRequireDefault(_Conversion);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5211,7 +5211,7 @@ var MainComponent = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_conversion2.default, null)
+        _react2.default.createElement(_Conversion2.default, null)
       );
     }
   }]);
@@ -29206,7 +29206,8 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 131 */
+/* 131 */,
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
