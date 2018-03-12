@@ -1,18 +1,28 @@
 ## Instructions
 - `npm install`
+- `npm test`
 - `npm start`
 - pull up `http://localhost:3000`
+- visit at: `https://concurrency-converter.herokuapp.com/`
 
-## A note about module versions
-I generally try to pin the critical packages in package.json to exact version numbers.
-That should ensure that things should work for you even if the React apis change significantly
-in future versions. If future versions of React are released, you can continue using the pinned
-versions in these files, or you can try to upgrade and follow the migration docs that React usually
-has with big api changes.
+## Functionality
 
-You can check the readme at https://github.com/jamischarles/ps_redux-demos for any major updates.
+- Pulls daily exchange rates from API
+- Allows user to select origin and destination currencies and amounts
+- Stores currency orders in a hosted PostreSQL database
+- Has basic testing, which will be expanded 
+- Deployed on heroku
+- Responsive web design whichworks on mobile
+- Uses Redux to manage state changes from user interaction and AJAX calls
+- Employes a logical flow of data, for ease in debugging and data flow visualization 
 
-## Other code changes after recording
-After recording, I added the following line to `webpack.config.js` to enable source maps. This makes debugging in chrome devtools
-much easier.
-`devtool: "source-map",`
+## Technologies Used
+
+- React
+- Redux
+- Node
+- Express
+- PostgreSQL
+- Heroku
+- Mocha
+- Chai
