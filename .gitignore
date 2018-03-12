@@ -8,4 +8,4 @@ scratchPad/
 node_modules/
 
 # Webpack
-app/public/build
+app/public/js/build
