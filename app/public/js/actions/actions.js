@@ -40,28 +40,34 @@ export const usernameChange = (usernameObj) => {
 }
 
 export const orderSubmit = (payload) => {
-  axios.get(`/userIdByUsername/${payload.username}`)
-    .then((userId) => {
-      payload.userId = userId.data.userId;
-      axios({
-        method: 'post',
-        url: '/createOrder',
-        headers: {"Content-Type": "application/json"},
-        data: JSON.stringify(payload)
-      })
-        .then(() => {
-          console.log('Order saved to database', payload)
-        })
-    })
-    .catch((err) => {
-      console.log('Order failed to save to database', payload)
-    })
-
-  return {
-    type:types.ORDER_SUBMIT,
-    data:{}
+  return (dispatch) => {
+    makeOrderEntry(payload, dispatch)
   }
 }
+
+const makeOrderEntry = (payload, dispatch) => {
+  dispatch({type:types.REQUEST_ORDER_INSERT, data: payload});
+
+  axios.get(`/userIdByUsername/${payload.username}`)
+  .then((userId) => {
+    payload.userId = userId.data.userId;
+    axios({
+      method: 'post',
+      url: '/createOrder',
+      headers: {"Content-Type": "application/json"},
+      data: JSON.stringify(payload)
+    })
+    .then(() => {
+      console.log('Order saved to database', payload)
+      dispatch({type:types.ORDER_SUBMIT, data: payload});
+    })
+  })
+  .catch((err) => {
+    console.log('Order failed to save to database', payload)
+    dispatch({type:types.RECEIVED_CONVERSION_RATE_FAILURE, data: err});
+  })
+}
+
 
 export const fetchConversionRate = (payload) => {
   return (dispatch) => {
@@ -85,7 +91,7 @@ const _makeConversionAjaxCall = (payload, dispatch) => {
 const makeConversionAjaxCall = debounce(_makeConversionAjaxCall, 300);
 
 
-export const fetchConversionRateAndFees = (payload, dispatch) => {
+export const fetchConversionRateAndFees = (payload) => {
   return (dispatch) => {
     makeConversionAndFeesAjaxCalls(payload, dispatch);
   }

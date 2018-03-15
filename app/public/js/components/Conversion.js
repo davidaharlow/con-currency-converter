@@ -23,7 +23,11 @@ class Conversion extends React.Component {
   }
 
   componentDidMount() {
-    
+    this.init(1)
+  }
+
+  init() {
+
   }
 
   handleOriginCurrencyChange(event) {
@@ -135,7 +139,7 @@ class Conversion extends React.Component {
     this.props.dispatch(actions.orderSubmit(orderSubmitPayload));
     alert(`Your order has been submitted and is saved in the postgres database. 
       To Do: Render Flash Message on Page and clean up left over state from transaction. 
-      Also, your ${this.props.destinationAmount} ${this.props.destinationCurrency} will be ready tomorrow at 12pm.)`).bind(this);
+      Also, your ${this.props.destinationAmount} ${this.props.destinationCurrency} will be ready tomorrow at 12pm.)`)
   }
 
   render() {

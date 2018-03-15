@@ -3,11 +3,11 @@ import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers/index';
 
-var logger = createLogger({
+const logger = createLogger({
     collapsed: true
 })
 
-var store = createStore(
+const store = createStore(
     rootReducer,
     applyMiddleware(thunk, logger)
 );
