@@ -57,17 +57,24 @@ const makeOrderEntry = (payload, dispatch) => {
       headers: {"Content-Type": "application/json"},
       data: JSON.stringify(payload)
     })
-    .then(() => {
-      console.log('Order saved to database', payload)
-      dispatch({type:types.ORDER_SUBMIT, data: payload});
-    })
+    .then((insertedOrder) => {
+      console.log('Order saved to database', insertedOrder)
+      dispatch({type:types.ORDER_SUBMIT, 
+        data: {
+          mostRecentOriginAmount: insertedOrder.data.rows[0].origin_amount,
+          mostRecentOriginCurrency: insertedOrder.data.rows[0].orign_currency,
+          mostRecentDestinationAmount: insertedOrder.data.rows[0].destination_amount,
+          mostRecentDestinationCurrency: insertedOrder.data.rows[0].destination_currency,
+          date: insertedOrder.data.rows[0].date
+        }
+      });
+    });
   })
   .catch((err) => {
     console.log('Order failed to save to database', payload)
     dispatch({type:types.RECEIVED_CONVERSION_RATE_FAILURE, data: err});
   })
 }
-
 
 export const fetchConversionRate = (payload) => {
   return (dispatch) => {
@@ -90,6 +97,36 @@ const _makeConversionAjaxCall = (payload, dispatch) => {
 }
 const makeConversionAjaxCall = debounce(_makeConversionAjaxCall, 300);
 
+export const initOrderInfo = (payload) => {
+  return (dispatch) => {
+    retrieveOrderFromDatabase(payload, dispatch);
+  }
+}
+
+const retrieveOrderFromDatabase = (userId, dispatch) => {
+  dispatch({type:types.GET_RECENT_ORDER, data: userId});
+  axios.get(`usernameByUserId/${userId}`)
+  .then((username) => {
+
+    axios.get(`getLastestOrder/${userId}`)
+    .then((resp) => {
+      console.log('resp.', resp.data.userId[0])
+      dispatch({type:types.RETREIVE_RECENT_ORDER, 
+        data: {
+          mostRecentOriginAmount: resp.data.userId[0].origin_amount,
+          mostRecentOriginCurrency: resp.data.userId[0].orign_currency,
+          mostRecentDestinationAmount: resp.data.userId[0].destination_amount,
+          mostRecentDestinationCurrency: resp.data.userId[0].destination_currency,
+          date: resp.data.userId[0].date,
+          username: username.data.username
+        }
+      });
+    });
+  })
+  .catch((err) => {
+    dispatch({type:types.RECEIVED_CONVERSION_RATE_FAILURE, data: err});
+  });
+}
 
 export const fetchConversionRateAndFees = (payload) => {
   return (dispatch) => {
@@ -128,7 +165,7 @@ const _makeFeeAjaxCall = (payload, dispatch) => {
     params: payload
   })
   .then((resp) => {
-    dispatch({type:types.RECEIVED_FEES_SUCCESS, data: resp.data});
+    dispatch({type:types.RECEIVED_FEES_SUCCESS, });
   })
   .catch((resp) => {
     const msg = getErrorMsg(resp);

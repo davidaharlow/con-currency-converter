@@ -48,10 +48,23 @@ router.get('/userIdByUsername/:username', async (req, res, next) => {
    res.json({userId: userId});
 });
 
-router.post('/createOrder', (req, res, next) => {
-   console.log('in server', req.body);
-   dbHelpers.createOrder(req.body)
-   res.sendStatus(201);
+router.get('/usernameByUserId/:userId', async (req, res, next) => {
+   const username = await dbHelpers.selectUsernameById(req.params.userId);
+   console.log('username', username)
+   res.json({username: username});
+});
+
+router.get('/getLastestOrder/:userid', async (req, res, next) => {
+  console.log('in server', req.params.userid)
+  const mostRecentOrder = await dbHelpers.getMostRecentOrderByUser(req.params.userid);
+  console.log(mostRecentOrder);
+  res.json({userId: mostRecentOrder});
+});
+
+router.post('/createOrder', async (req, res, next) => {
+   const createdOrder = await dbHelpers.createOrder(req.body)
+   console.log('created', createdOrder)
+   res.send(createdOrder);
 });
 
 module.exports = {

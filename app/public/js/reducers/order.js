@@ -1,7 +1,12 @@
 import { ActionTypes as types } from '../helpers/constants';
 
 const defaultState = {
-  username: ''
+  username: '',
+  date: '',
+  mostRecentOriginAmount: 0,
+  mostRecentOriginCurrency: 'USD',
+  mostRecentDestinationAmount: 0,
+  mostRecentDestinationCurrency: 'USD'
 };
 
 const order = (state = defaultState, action) => {
@@ -13,8 +18,23 @@ const order = (state = defaultState, action) => {
      }
     case (types.ORDER_SUBMIT):
       return {
-        ...state
+        ...state,
+        date: action.data.date,
+        mostRecentOriginAmount: action.data.mostRecentOriginAmount,
+        mostRecentOriginCurrency: action.data.mostRecentOriginCurrency,
+        mostRecentDestinationAmount: action.data.mostRecentDestinationAmount,
+        mostRecentDestinationCurrency: action.data.mostRecentDestinationCurrency
      }
+    case (types.RETREIVE_RECENT_ORDER):
+      return {
+        ...state,
+        date: action.data.date,
+        username: action.data.username,
+        mostRecentOriginAmount: action.data.mostRecentOriginAmount,
+        mostRecentOriginCurrency: action.data.mostRecentOriginCurrency,
+        mostRecentDestinationAmount: action.data.mostRecentDestinationAmount,
+        mostRecentDestinationCurrency: action.data.mostRecentDestinationCurrency
+    }
     default:
       return state;
   }

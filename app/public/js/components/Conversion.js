@@ -5,6 +5,7 @@ import Select from 'muicss/lib/react/select';
 import Input from 'muicss/lib/react/input';
 import Form from 'muicss/lib/react/form';
 import Button from 'muicss/lib/react/button';
+import Panel from 'muicss/lib/react/panel';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
 import FeesTable from './FeesTable';
@@ -26,8 +27,8 @@ class Conversion extends React.Component {
     this.init(1)
   }
 
-  init() {
-
+  init(profileId) {
+    this.props.dispatch(actions.initOrderInfo(profileId));
   }
 
   handleOriginCurrencyChange(event) {
@@ -180,6 +181,9 @@ class Conversion extends React.Component {
           fee={this.props.feeAmount}
           total={this.props.totalCost}
         />
+        <Panel>
+          {`${this.props.username || 'Loyal customer'}, your most recent order is for ${this.props.mostRecentOriginAmount}: ${this.props.mostRecentOriginCurrency} converted to ${this.props.mostRecentDestinationAmount}: ${this.props.mostRecentDestinationCurrency}, created ${this.props.date || 'in the near future!'}`}
+        </Panel>
       </div>
     )
   }
@@ -195,6 +199,11 @@ export default connect((state, props) => {
     feeAmount: state.amount.feeAmount,
     totalCost: state.amount.totalCost,
     username: state.order.username,
+    date: state.order.date,
+    mostRecentOriginAmount: state.order.mostRecentOriginAmount,
+    mostRecentOriginCurrency: state.order.mostRecentOriginCurrency,
+    mostRecentDestinationAmount: state.order.mostRecentDestinationAmount,
+    mostRecentDestinationCurrency: state.order.mostRecentDestinationCurrency,
     errorMsg: state.error.errorMsg,
   }
 
