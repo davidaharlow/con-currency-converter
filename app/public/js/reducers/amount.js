@@ -48,6 +48,18 @@ const amount = (state = defaultState, action) => {
         feeAmount: newFeeAmount,
         totalCost: newTotal
       }
+
+    case (types.RESET_AMOUNT_STATE):
+      return {
+        ...state,
+        originAmount: action.data.originAmount,
+        destinationAmount: action.data.destinationAmount,
+        originCurrency: action.data.originCurrency,
+        destinationCurrency: action.data.destinationCurrency,
+        conversionRate: action.data.conversionRate,
+        feeAmount: action.data.feeAmount,
+        totalCost: action.data.totalCost
+    }
     default:
       return state;
   }

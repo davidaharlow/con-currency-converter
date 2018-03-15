@@ -1435,6 +1435,7 @@ var ActionTypes = exports.ActionTypes = {
   CHANGE_ORIGIN_CURRENCY: 'CHANGE_ORIGIN_CURRENCY',
   CHANGE_DESTINATION_CURRENCY: 'CHANGE_DESTINATION_CURRENCY',
   CHANGE_USERNAME: 'CHANGE_USERNAME',
+  RESET_AMOUNT_STATE: 'RESET_AMOUNT_STATE',
 
   // AJAX Calls
   REQUEST_CONVERSION_RATE: 'REQUEST_CONVERSION_RATE',
@@ -26451,6 +26452,17 @@ var amount = function amount() {
         feeAmount: newFeeAmount,
         totalCost: newTotal
       });
+
+    case _constants.ActionTypes.RESET_AMOUNT_STATE:
+      return _extends({}, state, {
+        originAmount: action.data.originAmount,
+        destinationAmount: action.data.destinationAmount,
+        originCurrency: action.data.originCurrency,
+        destinationCurrency: action.data.destinationCurrency,
+        conversionRate: action.data.conversionRate,
+        feeAmount: action.data.feeAmount,
+        totalCost: action.data.totalCost
+      });
     default:
       return state;
   }
@@ -26476,6 +26488,7 @@ var _constants = __webpack_require__(11);
 var defaultState = {
   username: '',
   date: '',
+  mostRecentUsername: '',
   mostRecentOriginAmount: 0,
   mostRecentOriginCurrency: 'USD',
   mostRecentDestinationAmount: 0,
@@ -26494,6 +26507,7 @@ var order = function order() {
     case _constants.ActionTypes.ORDER_SUBMIT:
       return _extends({}, state, {
         date: action.data.date,
+        mostRecentUsername: action.data.mostRecentUsername,
         mostRecentOriginAmount: action.data.mostRecentOriginAmount,
         mostRecentOriginCurrency: action.data.mostRecentOriginCurrency,
         mostRecentDestinationAmount: action.data.mostRecentDestinationAmount,
@@ -26502,7 +26516,7 @@ var order = function order() {
     case _constants.ActionTypes.RETREIVE_RECENT_ORDER:
       return _extends({}, state, {
         date: action.data.date,
-        username: action.data.username,
+        mostRecentUsername: action.data.mostRecentUsername,
         mostRecentOriginAmount: action.data.mostRecentOriginAmount,
         mostRecentOriginCurrency: action.data.mostRecentOriginCurrency,
         mostRecentDestinationAmount: action.data.mostRecentDestinationAmount,
@@ -26764,7 +26778,6 @@ var Conversion = function (_React$Component) {
       };
 
       this.props.dispatch(actions.orderSubmit(orderSubmitPayload));
-      alert('Your order has been submitted and is saved in the postgres database. \n      To Do: Render Flash Message on Page and clean up left over state from transaction. \n      Also, your ' + this.props.destinationAmount + ' ' + this.props.destinationCurrency + ' will be ready tomorrow at 12pm.)');
     }
   }, {
     key: 'render',
@@ -26841,7 +26854,7 @@ var Conversion = function (_React$Component) {
         _react2.default.createElement(
           _panel2.default,
           null,
-          (this.props.username || 'Loyal customer') + ', your most recent order is for ' + this.props.mostRecentOriginAmount + ': ' + this.props.mostRecentOriginCurrency + ' converted to ' + this.props.mostRecentDestinationAmount + ': ' + this.props.mostRecentDestinationCurrency + ', created ' + (this.props.date || 'in the near future!')
+          (this.props.mostRecentUsername || 'Loyal customer') + ', your most recent order is for ' + this.props.mostRecentOriginAmount + ': ' + this.props.mostRecentOriginCurrency + ' converted to ' + this.props.mostRecentDestinationAmount + ': ' + this.props.mostRecentDestinationCurrency + ', created ' + (this.props.date || 'in the near future!')
         )
       );
     }
@@ -26860,6 +26873,7 @@ exports.default = (0, _reactRedux.connect)(function (state, props) {
     feeAmount: state.amount.feeAmount,
     totalCost: state.amount.totalCost,
     username: state.order.username,
+    mostRecentUsername: state.order.mostRecentUsername,
     date: state.order.date,
     mostRecentOriginAmount: state.order.mostRecentOriginAmount,
     mostRecentOriginCurrency: state.order.mostRecentOriginCurrency,
@@ -29892,13 +29906,27 @@ var makeOrderEntry = function makeOrderEntry(payload, dispatch) {
       data: JSON.stringify(payload)
     }).then(function (insertedOrder) {
       console.log('Order saved to database', insertedOrder);
+
       dispatch({ type: _constants.ActionTypes.ORDER_SUBMIT,
         data: {
           mostRecentOriginAmount: insertedOrder.data.rows[0].origin_amount,
           mostRecentOriginCurrency: insertedOrder.data.rows[0].orign_currency,
           mostRecentDestinationAmount: insertedOrder.data.rows[0].destination_amount,
           mostRecentDestinationCurrency: insertedOrder.data.rows[0].destination_currency,
-          date: insertedOrder.data.rows[0].date
+          date: insertedOrder.data.rows[0].date,
+          mostRecentUsername: payload.username
+        }
+      });
+
+      dispatch({ type: _constants.ActionTypes.RESET_AMOUNT_STATE,
+        data: {
+          originAmount: '0.00',
+          destinationAmount: '0.00',
+          originCurrency: 'USD',
+          destinationCurrency: 'USD',
+          conversionRate: 1.0,
+          feeAmount: 0.00,
+          totalCost: 0.00
         }
       });
     });
@@ -29946,7 +29974,7 @@ var retrieveOrderFromDatabase = function retrieveOrderFromDatabase(userId, dispa
           mostRecentDestinationAmount: resp.data.userId[0].destination_amount,
           mostRecentDestinationCurrency: resp.data.userId[0].destination_currency,
           date: resp.data.userId[0].date,
-          username: username.data.username
+          mostRecentUsername: username.data.username
         }
       });
     });
@@ -29989,7 +30017,7 @@ var _makeFeeAjaxCall = function _makeFeeAjaxCall(payload, dispatch) {
   _axios2.default.get('/api/fees', {
     params: payload
   }).then(function (resp) {
-    dispatch({ type: _constants.ActionTypes.RECEIVED_FEES_SUCCESS });
+    dispatch({ type: _constants.ActionTypes.RECEIVED_FEES_SUCCESS, data: resp.data });
   }).catch(function (resp) {
     var msg = (0, _actionHelpers.getErrorMsg)(resp);
     dispatch({ type: _constants.ActionTypes.RECEIVED_AJAX_CALL_FAILURE, data: { msg: msg, failedCall: 'fees' } });

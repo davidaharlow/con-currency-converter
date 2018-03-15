@@ -138,9 +138,6 @@ class Conversion extends React.Component {
     }
 
     this.props.dispatch(actions.orderSubmit(orderSubmitPayload));
-    alert(`Your order has been submitted and is saved in the postgres database. 
-      To Do: Render Flash Message on Page and clean up left over state from transaction. 
-      Also, your ${this.props.destinationAmount} ${this.props.destinationCurrency} will be ready tomorrow at 12pm.)`)
   }
 
   render() {
@@ -182,7 +179,7 @@ class Conversion extends React.Component {
           total={this.props.totalCost}
         />
         <Panel>
-          {`${this.props.username || 'Loyal customer'}, your most recent order is for ${this.props.mostRecentOriginAmount}: ${this.props.mostRecentOriginCurrency} converted to ${this.props.mostRecentDestinationAmount}: ${this.props.mostRecentDestinationCurrency}, created ${this.props.date || 'in the near future!'}`}
+          {`${this.props.mostRecentUsername || 'Loyal customer'}, your most recent order is for ${this.props.mostRecentOriginAmount}: ${this.props.mostRecentOriginCurrency} converted to ${this.props.mostRecentDestinationAmount}: ${this.props.mostRecentDestinationCurrency}, created ${this.props.date || 'in the near future!'}`}
         </Panel>
       </div>
     )
@@ -199,6 +196,7 @@ export default connect((state, props) => {
     feeAmount: state.amount.feeAmount,
     totalCost: state.amount.totalCost,
     username: state.order.username,
+    mostRecentUsername: state.order.mostRecentUsername,
     date: state.order.date,
     mostRecentOriginAmount: state.order.mostRecentOriginAmount,
     mostRecentOriginCurrency: state.order.mostRecentOriginCurrency,

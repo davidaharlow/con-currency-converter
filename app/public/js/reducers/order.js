@@ -3,6 +3,7 @@ import { ActionTypes as types } from '../helpers/constants';
 const defaultState = {
   username: '',
   date: '',
+  mostRecentUsername: '',
   mostRecentOriginAmount: 0,
   mostRecentOriginCurrency: 'USD',
   mostRecentDestinationAmount: 0,
@@ -20,6 +21,7 @@ const order = (state = defaultState, action) => {
       return {
         ...state,
         date: action.data.date,
+        mostRecentUsername: action.data.mostRecentUsername,
         mostRecentOriginAmount: action.data.mostRecentOriginAmount,
         mostRecentOriginCurrency: action.data.mostRecentOriginCurrency,
         mostRecentDestinationAmount: action.data.mostRecentDestinationAmount,
@@ -29,7 +31,7 @@ const order = (state = defaultState, action) => {
       return {
         ...state,
         date: action.data.date,
-        username: action.data.username,
+        mostRecentUsername: action.data.mostRecentUsername,
         mostRecentOriginAmount: action.data.mostRecentOriginAmount,
         mostRecentOriginCurrency: action.data.mostRecentOriginCurrency,
         mostRecentDestinationAmount: action.data.mostRecentDestinationAmount,

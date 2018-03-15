@@ -59,15 +59,30 @@ const makeOrderEntry = (payload, dispatch) => {
     })
     .then((insertedOrder) => {
       console.log('Order saved to database', insertedOrder)
+
       dispatch({type:types.ORDER_SUBMIT, 
         data: {
           mostRecentOriginAmount: insertedOrder.data.rows[0].origin_amount,
           mostRecentOriginCurrency: insertedOrder.data.rows[0].orign_currency,
           mostRecentDestinationAmount: insertedOrder.data.rows[0].destination_amount,
           mostRecentDestinationCurrency: insertedOrder.data.rows[0].destination_currency,
-          date: insertedOrder.data.rows[0].date
+          date: insertedOrder.data.rows[0].date,
+          mostRecentUsername: payload.username
         }
       });
+
+      dispatch({type:types.RESET_AMOUNT_STATE, 
+        data: {
+          originAmount: '0.00',
+          destinationAmount: '0.00',
+          originCurrency: 'USD',
+          destinationCurrency: 'USD',
+          conversionRate: 1.0,
+          feeAmount: 0.00,
+          totalCost: 0.00
+        }
+      });
+      
     });
   })
   .catch((err) => {
@@ -118,7 +133,7 @@ const retrieveOrderFromDatabase = (userId, dispatch) => {
           mostRecentDestinationAmount: resp.data.userId[0].destination_amount,
           mostRecentDestinationCurrency: resp.data.userId[0].destination_currency,
           date: resp.data.userId[0].date,
-          username: username.data.username
+          mostRecentUsername: username.data.username
         }
       });
     });
@@ -165,7 +180,7 @@ const _makeFeeAjaxCall = (payload, dispatch) => {
     params: payload
   })
   .then((resp) => {
-    dispatch({type:types.RECEIVED_FEES_SUCCESS, });
+    dispatch({type:types.RECEIVED_FEES_SUCCESS, data: resp.data});
   })
   .catch((resp) => {
     const msg = getErrorMsg(resp);
