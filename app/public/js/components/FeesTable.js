@@ -2,6 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class FeesTable extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     const {conversionRate, fee, total, originCurrency, destinationCurrency} = this.props;
 
@@ -10,12 +14,12 @@ class FeesTable extends React.Component {
         <table className="mui-table">
           <tbody>
             <tr>
-              <td>Conversion Rate</td>
+              <td className="td-title">Conversion Rate</td>
               <td>1 {originCurrency} -> {conversionRate.toFixed(2)} {destinationCurrency}</td>
             </tr>
             <tr>
               <td>Fee</td>
-              <td>{fee.toFixed(2)} {originCurrency}</td>
+              <td className="fee">{fee.toFixed(2)} {originCurrency}</td>
             </tr>
             <tr>
               <td className="total-label">Total Cost</td>
@@ -29,6 +33,7 @@ class FeesTable extends React.Component {
 }
 
 FeesTable.propTypes = {
+  fee: PropTypes.number.isRequired,
   conversionRate: PropTypes.number.isRequired,
   originCurrency: PropTypes.string.isRequired,
   total: PropTypes.number.isRequired,
