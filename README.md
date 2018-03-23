@@ -5,6 +5,10 @@
 - pull up `http://localhost:3000`
 - visit at: `https://concurrency-converter.herokuapp.com/`
 
+## Intent
+
+The application's primary purpose was to create a simple currency converter that utilized Redux Thunk to handle async API calls to retrieve exchange rate information.  
+
 ## Functionality
 
 - Pulls daily exchange rates from API
